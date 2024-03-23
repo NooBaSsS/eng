@@ -1,23 +1,27 @@
 import time
 import keyboard
+import os
 
 
 class Cell:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.char = '█'  # символ для клетки
+        self.image = '█'  # символ для клетки
+
+    def __str__(self):
+        return self.image
 
 
 class Field:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.cells = {(x, y): Cell(x, y) for x in range(width) for y in range(height)}
+        self.cells = {(x, y): Cell(x, y) for x in range(1, width + 1) for y in range(1, height + 1)}
         self.last_update_time = time.time()
 
     def get_cell(self, x, y):
-        return self.cells.get((x, y))
+        return self.cells[(x, y)]
 
     def handle_keys(self, event):
         # Обработка нажатых клавиш
@@ -30,15 +34,16 @@ class Field:
     def render(self):
         # Отрисовка игры
         output = ''
-        for y in range(self.height):
-            for x in range(self.width):
+        for y in range(1, self.height + 1):
+            for x in range(1, self.width + 1):
                 cell = self.get_cell(x, y)
-                output += cell.char
+                output += cell.image
             output += '\n'
         print('\033[H', end='')  # Перемещаем курсор в начало экрана
         print(output, end='')
 
     def run(self):
+        os.system('cls')
         while True:
             if keyboard.is_pressed('q'):
                 break
